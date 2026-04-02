@@ -1,0 +1,22 @@
+# kibana/config/kibana.yml
+server.name: kibana
+server.host: "0.0.0.0"
+
+elasticsearch.hosts: ["http://elasticsearch:9200"]
+elasticsearch.username: "kibana_system"
+# Password is injected via env var ELASTICSEARCH_PASSWORD in docker-compose.yml
+
+# Kibana will manage its own index
+monitoring.ui.container.elasticsearch.enabled: true
+
+# Logging
+logging:
+  appenders:
+    console:
+      type: console
+      layout:
+        type: pattern
+  root:
+    appenders: [console]
+    level: info
+

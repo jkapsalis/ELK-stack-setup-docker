@@ -1,0 +1,58 @@
+# filebeat/config/filebeat.yml
+filebeat.inputs:
+
+  # ── Docker container logs ─────────────────────────────────────────
+  - type: container
+    paths:
+      - "/var/lib/docker/containers/*/*.log"
+    processors:
+      - add_docker_metadata:
+          host: "unix:///var/run/docker.sock"
+      - decode_json_fields:
+          fields: ["message"]
+          target: ""
+          overwrite_keys: true
+          add_error_key: true
+
+  # ── Syslog / auth log (Linux host) ───────────────────────────────
+  - type: log
+    enabled: true
+    paths:
+      - /var/log/syslog
+      - /var/log/auth.log
+    fields:
+      log_type: syslog
+
+# ── Processors applied to every event ────────────────────────────
+processors:
+  - add_host_metadata:
+      when.not.contains.tags: forwarded
+  - add_cloud_metadata: ~
+
+# ── Output: ship to Logstash ──────────────────────────────────────
+output.logstash:
+  hosts: ["logstash:5044"]
+
+# ── Output: ship directly to Elasticsearch (alternative) ─────────
+# Uncomment the block below and comment out output.logstash above
+# to bypass Logstash.
+
+output.elasticsearch:
+  hosts: ["http://elasticsearch:9200"]
+  username: "elastic"
+  password: "${ELASTIC_PASSWORD}"
+  index: "filebeat-%{+yyyy.MM.dd}"
+
+# ── Kibana setup (used by `filebeat setup`) ───────────────────────
+setup.kibana:
+  host: "http://kibana:5601"
+
+setup.dashboards.enabled: true
+
+# ── ILM (index lifecycle management) ─────────────────────────────
+setup.ilm.enabled: auto
+setup.ilm.rollover_alias: "filebeat"
+setup.ilm.pattern: "{now/d}-000001"
+
+logging.level: info
+logging.to_files: false
