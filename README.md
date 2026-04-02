@@ -1,8 +1,19 @@
 # ELK Stack – Local Lab
 
-A self-contained **Elasticsearch + Logstash + Kibana + Filebeat** lab running
-in Docker Compose.  All services use version **8.13.0** with basic security
-enabled (no TLS inside the Docker network for simplicity).
+This purpose of that Lab is for educational purposes in order to dive in the technologies 
+of Docker, Docker-Compose and the ELK stack.
+
+This is a **Elasticsearch + Logstash + Kibana + Filebeat** lab running
+in Docker Compose.
+All services use version **8.13.0**.
+
+* The filebeat is used for shipping logs.
+* The logstash for storaging logs.
+* The elasticsearch for the searching.
+* The kibana for the UI.
+
+So by following the section of the starting commands you will be able to have the elk stack and access it
+by the http://localhost:5601   (Kibana UI)
 
 ---
 
@@ -21,10 +32,10 @@ elk-stack/
 │   └── pipeline/logstash.conf  ← edit your pipeline here
 │
 ├── kibana/
-│   └── config/kibana.yml
+│   └── config/kibana.yml    <- Here is the configuration of Kibana
 │
 └── filebeat/
-    └── config/filebeat.yml
+    └── config/filebeat.yml    <- Here is the configuration of Filebeat
 ```
 
 ---
@@ -36,23 +47,16 @@ elk-stack/
 | Docker Engine | 24 + |
 | Docker Compose v2 | 2.24 + |
 
-### Linux – increase vm.max_map_count (required by Elasticsearch)
-
-```bash
-sudo sysctl -w vm.max_map_count=262144
-# Make it permanent:
-echo "vm.max_map_count=262144" | sudo tee -a /etc/sysctl.conf
-```
 
 ---
 
-## Quick start
+### Starting commands to execute
 
 ```bash
-# . Clone / copy this folder, then enter it
+# 1. Clone / copy this folder, then enter it
 git clone https://github.com/jkapsalis/ELK-stack-setup-docker.git
 
-# 1. Create your .env file
+# 2. Create your .env file
 cp .env.example .env
 # Edit .env – change passwords if you like
 
@@ -67,7 +71,7 @@ docker compose up -d elasticsearch
 docker compose up -d 
 
 
-# 5. Open Kibana
+# 6. Open Kibana
 open http://localhost:5601
 # Login: elastic / <ELASTIC_PASSWORD> from .env
 # user:elastic | password:changeme
@@ -126,20 +130,7 @@ curl -u elastic:changeme http://localhost:9200/_cluster/health?pretty
 
 ---
 
-## Customising Logstash pipelines
 
-Edit `logstash/pipeline/logstash.conf`.  The pipeline already handles:
-
-- **Beats / Filebeat** input on port 5044  
-- **TCP JSON** input on port 5000  
-- **Apache/Nginx combined** access log parsing via Grok  
-- **Generic JSON** message parsing  
-
-After editing, restart Logstash:
-
-```bash
-docker compose restart logstash
-```
 
 ---
 
