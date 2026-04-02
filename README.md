@@ -152,4 +152,5 @@ docker compose restart logstash
 - Heap sizes are configured via `ES_HEAP` and `LS_HEAP` in `.env`.
   For a laptop lab, 512 m / 256 m is fine.
 
+## Architecture image
 ![alt text](docker-elk-diagran-architecture.drawio.png)
