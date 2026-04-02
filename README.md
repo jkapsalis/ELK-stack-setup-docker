@@ -50,7 +50,7 @@ echo "vm.max_map_count=262144" | sudo tee -a /etc/sysctl.conf
 
 ```bash
 # . Clone / copy this folder, then enter it
-git clone
+git clone https://github.com/jkapsalis/ELK-stack-setup-docker.git
 
 # 1. Create your .env file
 cp .env.example .env
