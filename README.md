@@ -151,3 +151,5 @@ docker compose restart logstash
   Re-run `setup.sh` if you change it.
 - Heap sizes are configured via `ES_HEAP` and `LS_HEAP` in `.env`.
   For a laptop lab, 512 m / 256 m is fine.
+
+![alt text](docker-elk-diagran-architecture.jpg)
